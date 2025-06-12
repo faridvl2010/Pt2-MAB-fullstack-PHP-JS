@@ -14,7 +14,6 @@ document.getElementById('paisSelect').addEventListener('change', async (e) => {
     lista.appendChild(li);
   });
 
-  // Guardar en variables globales para el PDF
   window.universidades = universidades;
   window.paisSeleccionado = pais;
 });
@@ -29,40 +28,27 @@ document.getElementById('descargarBtn').addEventListener('click', async () => {
   const doc = new jsPDF();
   const fecha = new Date();
 
-  // Títulos
   doc.setFont('helvetica', 'bold');
   doc.text(`Universidades en ${window.paisSeleccionado}`, 10, 10);
   doc.setFont('helvetica', 'normal');
   doc.text(`Generado: ${fecha.toLocaleString()}`, 10, 18);
 
-  // Inicio de contenido
-  let y = 30;
-  let contador = 1;
-  const lineHeight = 8;
-  const pageHeight = doc.internal.pageSize.height;
+  const data = window.universidades.map((u, i) => [
+    i + 1,
+    u.name,
+    u.domains[0],
+    u.web_pages[0]
+  ]);
 
- const marginX = 10;
-const maxWidth = doc.internal.pageSize.width - marginX * 2;
-y = 30;
-contador = 1;
-
-window.universidades.forEach((u, i) => {
-  const lineaLarga = `${contador++}. ${u.name} - ${u.domains[0]} - ${u.web_pages[0]}`;
-  const lineas = doc.splitTextToSize(lineaLarga, maxWidth);
-
-  if (y + lineas.length * lineHeight > pageHeight - 20) {
-    doc.addPage();
-    y = 20;
-  }
-
-  lineas.forEach(linea => {
-    doc.text(linea, marginX, y);
-    y += lineHeight;
+  doc.autoTable({
+    head: [['#', 'Nombre', 'Dominio', 'Web']],
+    body: data,
+    startY: 25,
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [22, 160, 133] },
+    margin: { top: 25, left: 10, right: 10 }
   });
-});
 
-
-  // Crear Blob, enviar al backend
   const pdfBlob = doc.output('blob');
   const formData = new FormData();
   formData.append('pdf', pdfBlob, 'universidades.pdf');
@@ -82,11 +68,10 @@ window.universidades.forEach((u, i) => {
     body: formData
   });
 
-  const data = await res.json();
+  const dataRes = await res.json();
   if (res.ok) {
     alert('PDF guardado correctamente en el servidor');
   } else {
-    alert(data.error || 'Error al guardar PDF');
+    alert(dataRes.error || 'Error al guardar PDF');
   }
 });
-
