@@ -29,13 +29,40 @@ document.getElementById('descargarBtn').addEventListener('click', async () => {
   const doc = new jsPDF();
   const fecha = new Date();
 
+  // Títulos
+  doc.setFont('helvetica', 'bold');
   doc.text(`Universidades en ${window.paisSeleccionado}`, 10, 10);
-  doc.text(`Generado: ${fecha.toLocaleString()}`, 10, 20);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Generado: ${fecha.toLocaleString()}`, 10, 18);
 
-  window.universidades.forEach((u, i) => {
-    doc.text(`${i + 1}. ${u.name} - ${u.domains[0]} - ${u.web_pages[0]}`, 10, 30 + i * 10);
+  // Inicio de contenido
+  let y = 30;
+  let contador = 1;
+  const lineHeight = 8;
+  const pageHeight = doc.internal.pageSize.height;
+
+ const marginX = 10;
+const maxWidth = doc.internal.pageSize.width - marginX * 2;
+y = 30;
+contador = 1;
+
+window.universidades.forEach((u, i) => {
+  const lineaLarga = `${contador++}. ${u.name} - ${u.domains[0]} - ${u.web_pages[0]}`;
+  const lineas = doc.splitTextToSize(lineaLarga, maxWidth);
+
+  if (y + lineas.length * lineHeight > pageHeight - 20) {
+    doc.addPage();
+    y = 20;
+  }
+
+  lineas.forEach(linea => {
+    doc.text(linea, marginX, y);
+    y += lineHeight;
   });
+});
 
+
+  // Crear Blob, enviar al backend
   const pdfBlob = doc.output('blob');
   const formData = new FormData();
   formData.append('pdf', pdfBlob, 'universidades.pdf');
@@ -62,3 +89,4 @@ document.getElementById('descargarBtn').addEventListener('click', async () => {
     alert(data.error || 'Error al guardar PDF');
   }
 });
+
