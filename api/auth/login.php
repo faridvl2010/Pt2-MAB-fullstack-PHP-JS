@@ -7,18 +7,15 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 $username = trim($data['username']);
 $password = trim($data['password']);
-$secretKey = 'clave_secreta_segura'; // Cambiar por algo más fuerte en producción
+
+$secretKey = 'clave_secreta_segura';
 
 $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE username = ?");
 $stmt->execute([$username]);
 $user = $stmt->fetch();
 
 if ($user && password_verify($password, $user['password_hash'])) {
-    $payload = [
-        'user_id' => $user['id'],
-        'iat' => time(),
-        'exp' => time() + 3600 // Token válido por 1 hora
-    ];
+    $payload = ['user_id' => $user['id'], 'iat' => time(), 'exp' => time() + 3600];
     $token = JWT::encode($payload, $secretKey);
     echo json_encode(['token' => $token]);
 } else {
