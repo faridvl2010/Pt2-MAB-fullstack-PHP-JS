@@ -1,4 +1,5 @@
 document.getElementById('paisSelect').addEventListener('change', async (e) => {
+document.getElementById('filtroContainer').style.display = 'block';
   const pais = e.target.value;
   if (!pais) return;
 
@@ -19,7 +20,8 @@ universidades.forEach((u, i) => {
 });
 
 
-  window.universidades = universidades;
+  window.universidadesOriginal = universidades;
+  renderizarTabla(universidades); // nueva función que usaremos
   window.paisSeleccionado = pais;
 });
 
@@ -79,4 +81,25 @@ document.getElementById('descargarBtn').addEventListener('click', async () => {
   } else {
     alert(dataRes.error || 'Error al guardar PDF');
   }
+});
+function renderizarTabla(universidades) {
+  const tbody = document.getElementById('tablaUniversidades');
+  tbody.innerHTML = '';
+  universidades.forEach((u, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${u.name}</td>
+      <td>${u.domains[0]}</td>
+      <td><a href="${u.web_pages[0]}" target="_blank">${u.web_pages[0]}</a></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+document.getElementById('filtroNombre').addEventListener('input', e => {
+  const filtro = e.target.value.toLowerCase();
+  const resultado = window.universidadesOriginal.filter(u =>
+    u.name.toLowerCase().includes(filtro)
+  );
+  renderizarTabla(resultado);
 });
