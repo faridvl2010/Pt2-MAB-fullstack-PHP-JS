@@ -5,14 +5,19 @@ document.getElementById('paisSelect').addEventListener('change', async (e) => {
   const res = await fetch(`http://universities.hipolabs.com/search?country=${pais}`);
   const universidades = await res.json();
 
-  const lista = document.getElementById('listaUniversidades');
-  lista.innerHTML = '';
-  universidades.forEach(u => {
-    const li = document.createElement('li');
-    li.className = 'list-group-item';
-    li.textContent = `${u.name} - ${u.domains[0]} - ${u.web_pages[0]}`;
-    lista.appendChild(li);
-  });
+  const tbody = document.getElementById('tablaUniversidades');
+    tbody.innerHTML = '';
+universidades.forEach((u, i) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${i + 1}</td>
+    <td>${u.name}</td>
+    <td>${u.domains[0]}</td>
+    <td><a href="${u.web_pages[0]}" target="_blank">${u.web_pages[0]}</a></td>
+  `;
+  tbody.appendChild(tr);
+});
+
 
   window.universidades = universidades;
   window.paisSeleccionado = pais;

@@ -16,7 +16,19 @@
     <option value="Colombia">Colombia</option>
     <option value="España">España</option>
   </select>
-  <ul id="listaUniversidades" class="list-group mb-3"></ul>
+  <table class="table table-bordered table-striped mb-3">
+  <thead class="table-dark">
+    <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Dominio</th>
+      <th>Sitio Web</th>
+    </tr>
+  </thead>
+  <tbody id="tablaUniversidades">
+  </tbody>
+</table>
+
   <button id="descargarBtn" class="btn btn-success">Descargar PDF</button>
   <div class="mt-4 d-flex justify-content-between">
   <button id="cerrarSesionBtn" class="btn btn-danger">Cerrar sesión</button>
@@ -24,7 +36,13 @@
   </div>
 
   <script src="main.js">
-    document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
+     if (!localStorage.getItem('token')) {
+    alert('No estás autenticado.');
+    window.location.href = 'index.html';
+  }
+
+  // Cerrar sesión
+  document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
     localStorage.removeItem('token');
     window.location.href = 'index.html';
   });
