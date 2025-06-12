@@ -1,16 +1,26 @@
 <?php
-session_start();
 require '../../config/db.php';
+require '../../lib/JWT.php';
 
-if (!isset($_SESSION['user_id'])) {
+$headers = getallheaders();
+if (!isset($headers['Authorization'])) {
   http_response_code(403);
-  echo json_encode(['error' => 'No autenticado']);
+  echo json_encode(['error' => 'Token no enviado']);
   exit;
 }
 
-$userId = $_SESSION['user_id'];
-$pais = $_POST['pais'];
+$secretKey = 'clave_secreta_segura';
+$token = str_replace('Bearer ', '', $headers['Authorization']);
+try {
+    $decoded = JWT::decode($token, $secretKey);
+    $userId = $decoded->user_id;
+} catch (Exception $e) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Token inválido o expirado']);
+    exit;
+}
 
+$pais = $_POST['pais'];
 if (!isset($_FILES['pdf'])) {
   http_response_code(400);
   echo json_encode(['error' => 'Archivo no recibido']);
@@ -18,8 +28,7 @@ if (!isset($_FILES['pdf'])) {
 }
 
 $fecha = date('Ymd_His');
-$sessionId = session_id();
-$filename = "{$sessionId}_{$fecha}.pdf";
+$filename = "{$userId}_{$fecha}.pdf";
 $filepath = "../../pdfs/$filename";
 
 move_uploaded_file($_FILES['pdf']['tmp_name'], $filepath);
