@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
-
 </head>
 <body class="container py-5">
   <h2>Universidades por País</h2>
@@ -16,43 +15,31 @@
     <option value="Colombia">Colombia</option>
     <option value="España">España</option>
   </select>
-  <div id="filtroContainer" class="mb-3" style="display: none;">
-  <label for="filtroNombre" class="form-label">Filtrar por nombre de universidad:</label>
-  <input type="text" id="filtroNombre" class="form-control" placeholder="Ej: Nacional, Autónoma, etc.">
-  </div>
 
+  <div id="filtroContainer" class="mb-3" style="display: none;">
+    <label for="filtroNombre" class="form-label">Filtrar por nombre de universidad:</label>
+    <input type="text" id="filtroNombre" class="form-control" placeholder="Ej: Nacional, Autónoma, etc.">
+  </div>
 
   <table class="table table-bordered table-striped mb-3">
-  <thead class="table-dark">
-    <tr>
-      <th>#</th>
-      <th>Nombre</th>
-      <th>Dominio</th>
-      <th>Sitio Web</th>
-    </tr>
-  </thead>
-  <tbody id="tablaUniversidades">
-  </tbody>
-</table>
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Dominio</th>
+        <th>Sitio Web</th>
+      </tr>
+    </thead>
+    <tbody id="tablaUniversidades"></tbody>
+  </table>
 
-  
-<button id="descargarBtn" class="btn btn-success">Descargar PDF</button>
+  <button id="descargarBtn" class="btn btn-success">Descargar PDF</button>
+
   <div class="mt-4 d-flex justify-content-between">
-  <button id="cerrarSesionBtn" class="btn btn-danger">Cerrar sesión</button>
-  <a href="index.html" class="btn btn-secondary">Volver</a>
+    <button id="cerrarSesionBtn" class="btn btn-danger">Cerrar sesión</button>
+    <a href="index.html" class="btn btn-secondary">Volver</a>
   </div>
-  <script src="main.js"></script>
-  <script>
-     if (!localStorage.getItem('token')) {
-    alert('No estás autenticado.');
-    window.location.href = 'index.html';
-  }
 
-  // Cerrar sesión
-  document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
-    localStorage.removeItem('token');
-    window.location.href = 'index.html';
-  });
-  </script>
+  <script src="main.js"></script>
 </body>
 </html>
