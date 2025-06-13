@@ -15,7 +15,13 @@ $stmt->execute([$username]);
 $user = $stmt->fetch();
 
 if ($user && password_verify($password, $user['password_hash'])) {
-    $payload = ['user_id' => $user['id'], 'iat' => time(), 'exp' => time() + 3600];
+$payload = [
+    'user_id' => $user['id'],
+    'username' => $user['username'], // 👈 esto es clave
+    'iat' => time(),
+    'exp' => time() + 3600
+];
+
     $token = JWT::encode($payload, $secretKey);
     echo json_encode(['token' => $token]);
 } else {

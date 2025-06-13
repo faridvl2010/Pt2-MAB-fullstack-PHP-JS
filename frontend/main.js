@@ -1,3 +1,13 @@
+function decodificarToken(token) {
+  try {
+    const payloadBase64 = token.split('.')[1];
+    const payloadDecoded = atob(payloadBase64);
+    return JSON.parse(payloadDecoded);
+  } catch (e) {
+    return null;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -5,6 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'index.html';
     return;
   }
+
+  const payload = decodificarToken(token);
+  const nombreUsuario = payload?.username || 'Usuario';
+
+  // Mostrar saludo
+  const saludoEl = document.getElementById('saludoUsuario');
+  if (saludoEl) saludoEl.textContent = `Bienvenido, ${nombreUsuario}`;
 
   document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
     localStorage.removeItem('token');
@@ -50,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     doc.setFont('helvetica', 'bold');
     doc.text(`Universidades en ${paisSeleccionado}`, 10, 10);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Generado: ${fecha.toLocaleString()}`, 10, 18);
+    doc.text(`Generado por: ${nombreUsuario} - ${fecha.toLocaleString()}`, 10, 18);
 
     const data = window.universidades.map((u, i) => [
       i + 1,
