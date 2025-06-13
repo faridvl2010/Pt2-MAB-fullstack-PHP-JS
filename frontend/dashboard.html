@@ -35,13 +35,14 @@
   </tbody>
 </table>
 
-  <button id="descargarBtn" class="btn btn-success">Descargar PDF</button>
+  
+<button id="descargarBtn" class="btn btn-success">Descargar PDF</button>
   <div class="mt-4 d-flex justify-content-between">
   <button id="cerrarSesionBtn" class="btn btn-danger">Cerrar sesión</button>
   <a href="index.html" class="btn btn-secondary">Volver</a>
   </div>
-
-  <script src="main.js">
+  <script src="main.js"></script>
+  <script>
      if (!localStorage.getItem('token')) {
     alert('No estás autenticado.');
     window.location.href = 'index.html';

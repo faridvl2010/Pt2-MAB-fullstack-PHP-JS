@@ -21,7 +21,7 @@ universidades.forEach((u, i) => {
 
 
   window.universidadesOriginal = universidades;
-  renderizarTabla(universidades); // nueva función que usaremos
+  renderizarTabla(universidades); 
   window.paisSeleccionado = pais;
 });
 
@@ -102,4 +102,22 @@ document.getElementById('filtroNombre').addEventListener('input', e => {
     u.name.toLowerCase().includes(filtro)
   );
   renderizarTabla(resultado);
+});
+document.addEventListener('DOMContentLoaded', () => {
+  // Verificar token
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('No estás autenticado.');
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Botón cerrar sesión
+  const cerrarBtn = document.getElementById('cerrarSesionBtn');
+  if (cerrarBtn) {
+    cerrarBtn.addEventListener('click', () => {
+      localStorage.removeItem('token');
+      window.location.href = 'index.html';
+    });
+  }
 });
