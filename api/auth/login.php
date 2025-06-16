@@ -17,7 +17,7 @@ $user = $stmt->fetch();
 if ($user && password_verify($password, $user['password_hash'])) {
 $payload = [
     'user_id' => $user['id'],
-    'username' => $user['username'], // 👈 esto es clave
+    'username' => $user['username'], // Trae el username para mostrarlo en interfaz
     'iat' => time(),
     'exp' => time() + 3600
 ];
